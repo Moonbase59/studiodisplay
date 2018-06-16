@@ -1,0 +1,250 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Studio Display</title>
+
+  <link rel="stylesheet" href="css/weather-icons.min.css">
+  <link rel="stylesheet" href="css/weather-icons-wind.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- base font (sans-serif: Titillium Web, Lato, Exo 2, Montserrat, Poppins, Noto Sans) -->
+  <link href="https://fonts.googleapis.com/css?family=Titillium+Web:400,600,700,900&amp;subset=latin-ext" rel="stylesheet">
+  <link rel="stylesheet" href="css/studiodisplay-nokodi.min.css">
+
+  <script src="js/config-ini.min.js" type="text/javascript"></script>
+  <script src="js/gettext.min.js" type="text/javascript"></script>
+  <script src="js/paho-mqtt.min.js" type="text/javascript"></script>
+  <script src="js/suncalc.min.js" type="text/javascript"></script>
+  <script src="js/studiodisplay.min.js" type="text/javascript"></script>
+  <script src="js/clock.min.js" type="text/javascript"></script>
+</head>
+<body>
+  <!--
+  index-nokodi.html
+
+  StudioDisplay main web page, without the area for KODI (has longer radio stream title area).
+
+  Copyright © 2018 Matthias C. Hormann (@Moonbase59, mhormann@gmx.de)
+
+  This file is part of StudioDisplay.
+
+  StudioDisplay is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  StudioDisplay is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with StudioDisplay.  If not, see <http://www.gnu.org/licenses/>.
+
+  -
+
+  Diese Datei ist Teil von StudioDisplay.
+
+  StudioDisplay ist Freie Software: Sie können es unter den Bedingungen
+  der GNU General Public License, wie von der Free Software Foundation,
+  Version 3 der Lizenz oder (nach Ihrer Wahl) jeder neueren
+  veröffentlichten Version, weiter verteilen und/oder modifizieren.
+
+  StudioDisplay wird in der Hoffnung, dass es nützlich sein wird, aber
+  OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite
+  Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.
+  Siehe die GNU General Public License für weitere Details.
+
+  Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
+  Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+  -->
+
+  <!--
+  Internationalization/Localization rules
+
+  Elements with an id will be replaced with DATA, usually from MQTT, sometimes from JS.
+  An id contains usually the last part of an MQTT TOPIC (at least minus the base "…/status/" part).
+  Thusly, an element with id="elevation" gets filled with (localized & converted) data
+  from an MQTT topic like "weather/xxx/status/elevation".
+
+  Values often have a UNIT NAME to go with it, like temperatures (°C, °F). To display these,
+  use an element with a class as specified at the top of each language file. These classes
+  ALWAYS begin with a leading dot, i.e. a class of ".temperature" will fill the element’s
+  inner HTML with the unit text from the language file, like "°C".
+  If you specify <span class=".temperature"></span>, you’ll get whatever is specified in the
+  language file under ".temperature_text" (like °C or °F).
+
+  Other fixed text like labels can be translated via the language file by using a class name
+  of "i18n". The text within the element will be looked up an translated.
+  Thus, if you specify <h3 class="i18n">Today</h3>, you might get <h3 class="i18n">Heute</h3>
+  in the German translation.
+
+  EXAMPLE:
+
+  Translation in "lang-de-DE.json":     Translation in "lang-en-US":
+  ".temperature": "C",                  ".temperature": "F",
+  ".temperature_text": "°C",            ".temperature_text": "°F".
+  …                                     …
+  "Today": "Heute",                     "Today": "Today",
+
+  In HTML (here) you have:
+  <h3 class="i18n">Today</h3>
+  <span id="temperature">—</span>&nbsp;<span class=".temperature"></span>
+
+  What you will see in German:          What you will see in American English:
+  Heute                                 Today
+  21,7 °C                               71.1 °F
+
+  Easy,ain’t it? :-)
+  -->
+
+  <div class="grid">
+    <div class="box title">
+      <h1 id="title">Studio Display</h1>
+    </div>
+
+    <div class="box clock">
+      <canvas id="canvas"></canvas>
+      <div>
+        <br>
+        <h2><span id="clock/date">—</span></h2>
+        <p><span id="lighting/fullname">—</span></p>
+      </div>
+    </div>
+
+    <div class="box weather">
+      <div class="weather-box weather-title">
+        <h2><span id="city">—</span> <small>(<span id="elevation">—</span>&nbsp;<span class=".elevation"></span> <span class="i18n">above sea level</span>)</small></h2>
+        <p><small><span class="i18n">Forecast from</span> <span id="observation_epoch">—</span></small></p>
+      </div>
+
+      <!-- Today - current -->
+      <div class="weather-box weather-current">
+        <h3 class="i18n">Current</h3>
+        <p>&nbsp;</p>
+        <p class="v-center">
+          <span class="xlarge-symbol"><i id="icon" class="wi wi-wu-clear"></i></span>&ensp;
+          <span class="large-text"><span id="temperature">—</span>&nbsp;<span class=".temperature"></span></span>
+        </p>
+        <p><span class="i18n">feels like</span> <span id="feelslike">—</span>&nbsp;<span class=".temperature"></span></p>
+        <p><span id="weather">—</span></p>
+      </div>
+      <div class="weather-box">
+        <table>
+          <tr>
+            <td class="i18n">Sun</td>
+            <!-- if your weather provider returns reliable data, use ids "sunrise" & "sunset", -->
+            <!-- otherwise the lighting module can deliver these, use "lighting/sunrise" & "lighting/sunset" -->
+            <td>
+              <i class="wi wi-sunrise"></i> <span id="lighting/sunrise">—</span>&emsp;
+              <i class="wi wi-solar-eclipse"></i> <span id="lighting/noon">—</span>&emsp;
+              <i class="wi wi-sunset"></i> <span id="lighting/sunset"></span>
+            </td>
+          </tr>
+          <tr>
+            <td class="i18n">Moon</td>
+            <td>
+              <!-- if your weather provider returns reliable data, use ids "moonset", "moonrise", "moonage" and "moonpercent", -->
+              <!-- otherwise the lighting module can deliver these, use "lighting/moonset", "lighting/moonrise", "lighting/moonage", "lighting/moonpercent" -->
+              <i class="wi wi-moonset"></i> <span id="lighting/moonset"></span>&emsp; <i class="wi wi-moonrise"></i> <span id="lighting/moonrise">—</span>&emsp;
+              <i id="lighting/moonage" class="wi wi-moon-0"></i> (<span id="lighting/moonpercent">—</span>&nbsp;%)
+            </td>
+          </tr>
+          <tr>
+            <td class="i18n">Golden hour</td>
+            <td><i class="wi wi-solar-eclipse" style="color: rgba(255,215,0,0.6);"></i> <span id="lighting/goldenHourDawn/begin">—</span>–<span id="lighting/goldenHourDawn/end">—</span>, <span id="lighting/goldenHourDusk/begin">—</span>–<span id="lighting/goldenHourDusk/end">—</span></td>
+          </tr>
+          <tr>
+            <td class="i18n">Blue hour</td>
+            <td><i class="wi wi-solar-eclipse" style="color: rgba(0,0,255,0.6);"></i> <span id="lighting/blueHourDawn/begin">—</span>–<span id="lighting/blueHourDawn/end">—</span>, <span id="lighting/blueHourDusk/begin">—</span>–<span id="lighting/blueHourDusk/end">—</span></td>
+          </tr>
+        </table>
+        <p>&nbsp;</p>
+        <span class="i18n">UV</span> <span id="uv" class="uv-color uv-color-none">–</span>&emsp;
+        <i class="wi wi-humidity"></i> <span id="humidity">—</span>&nbsp;%&emsp;
+        <i class="wi wi-barometer"></i> <span id="pressure">—</span>&nbsp;<span class=".pressure"></span>&emsp;
+        <i class="wi wi-raindrop"></i> <span id="precipitation">—</span>&nbsp;<span class=".precipitation"></span>&emsp;
+        <i id="winddirection" class="wi wi-wind"></i> <span id="wind_dir">—</span>, <span id="windspeed">—</span>&nbsp;<span class=".speed"></span>
+        <br>
+      </div>
+
+      <!-- Today - forecast -->
+      <div class="weather-box v-center">
+        <h3 class="i18n">Today</h3>
+      </div>
+      <div class="weather-box v-center">
+        <p class="large-symbol"><i id="forecast/0/icon" class="wi wi-wu-clear"></i></p>
+      </div>
+      <div class="weather-box">
+        <i class="wi wi-thermometer"></i> <span id="forecast/0/temperature_low">—</span>–<span id="forecast/0/temperature_high">—</span>&nbsp;<span class=".temperature"></span>&emsp;
+        <i class="wi wi-humidity"></i> <span id="forecast/0/humidity">—</span>&nbsp;%&emsp;
+        <span id="forecast/0/weather">—</span><br>
+        <i class="wi wi-raindrop"></i> <span id="forecast/0/pop">—</span>&nbsp;%&ensp;<span id="forecast/0/precipitation">—</span>&nbsp;<span class=".precipitation"></span>&emsp;
+        <i class="wi wi-snowflake-cold"></i> <span id="forecast/0/snow">—</span>&nbsp;<span class=".snowfall"></span>&emsp;
+        <i id="forecast/0/winddirection" class="wi wi-wind"></i> <span id="forecast/0/wind_dir">—</span>, <span id="forecast/0/windspeed">—</span>&nbsp;<span class=".speed"></span>,
+        <span class="i18n">gusts up to</span> <span id="forecast/0/windspeed_max">—</span>&nbsp;<span class=".speed"></span>
+      </div>
+
+      <!-- Tomorrow - forecast -->
+      <div class="weather-box v-center">
+        <h3><span id="forecast/1/epoch">—</span></h3>
+      </div>
+      <div class="weather-box v-center">
+        <p class="large-symbol"><i id="forecast/1/icon" class="wi wi-wu-clear"></i></p>
+      </div>
+      <div class="weather-box">
+        <i class="wi wi-thermometer"></i> <span id="forecast/1/temperature_low">—</span>–<span id="forecast/1/temperature_high">—</span>&nbsp;<span class=".temperature"></span>&emsp;
+        <i class="wi wi-humidity"></i> <span id="forecast/1/humidity">—</span>&nbsp;%&emsp;
+        <span id="forecast/1/weather">—</span><br>
+        <i class="wi wi-raindrop"></i> <span id="forecast/1/pop">—</span>&nbsp;%&ensp;<span id="forecast/1/precipitation">—</span>&nbsp;<span class=".precipitation"></span>&emsp;
+        <i class="wi wi-snowflake-cold"></i> <span id="forecast/1/snow">—</span>&nbsp;<span class=".snowfall"></span>&emsp;
+        <i id="forecast/1/winddirection" class="wi wi-wind"></i> <span id="forecast/1/wind_dir">—</span>, <span id="forecast/1/windspeed">—</span>&nbsp;<span class=".speed"></span>,
+        <span class="i18n">gusts up to</span> <span id="forecast/1/windspeed_max">—</span>&nbsp;<span class=".speed"></span>
+      </div>
+
+      <!-- In 2 days - forecast -->
+      <div class="weather-box v-center">
+        <h3><span id="forecast/2/epoch">—</span></h3>
+      </div>
+      <div class="weather-box v-center">
+        <p class="large-symbol"><i id="forecast/2/icon" class="wi wi-wu-clear"></i></p>
+      </div>
+      <div class="weather-box">
+        <i class="wi wi-thermometer"></i> <span id="forecast/2/temperature_low">—</span>–<span id="forecast/2/temperature_high">—</span>&nbsp;<span class=".temperature"></span>&emsp;
+        <i class="wi wi-humidity"></i> <span id="forecast/2/humidity">—</span>&nbsp;%&emsp;
+        <span id="forecast/2/weather">—</span><br>
+        <i class="wi wi-raindrop"></i> <span id="forecast/2/pop">—</span>&nbsp;%&ensp;<span id="forecast/2/precipitation">—</span>&nbsp;<span class=".precipitation"></span>&emsp;
+        <i class="wi wi-snowflake-cold"></i> <span id="forecast/2/snow">—</span>&nbsp;<span class=".snowfall"></span>&emsp;
+        <i id="forecast/2/winddirection" class="wi wi-wind"></i> <span id="forecast/2/wind_dir">—</span>, <span id="forecast/2/windspeed">—</span>&nbsp;<span class=".speed"></span>,
+        <span class="i18n">gusts up to</span> <span id="forecast/2/windspeed_max">—</span>&nbsp;<span class=".speed"></span>
+      </div>
+
+      <!-- In 3 days - forecast -->
+      <div class="weather-box v-center">
+        <h3><span id="forecast/3/epoch">—</span></h3>
+      </div>
+      <div class="weather-box v-center">
+        <p class="large-symbol"><i id="forecast/3/icon" class="wi wi-wu-clear"></i></p>
+      </div>
+      <div class="weather-box">
+        <i class="wi wi-thermometer"></i> <span id="forecast/3/temperature_low">—</span>–<span id="forecast/3/temperature_high">—</span>&nbsp;<span class=".temperature"></span>&emsp;
+        <i class="wi wi-humidity"></i> <span id="forecast/3/humidity">—</span>&nbsp;%&emsp;
+        <span id="forecast/3/weather">—</span><br>
+        <i class="wi wi-raindrop"></i> <span id="forecast/3/pop">—</span>&nbsp;%&ensp;<span id="forecast/3/precipitation">—</span>&nbsp;<span class=".precipitation"></span>&emsp;
+        <i class="wi wi-snowflake-cold"></i> <span id="forecast/3/snow">—</span>&nbsp;<span class=".snowfall"></span>&emsp;
+        <i id="forecast/3/winddirection" class="wi wi-wind"></i> <span id="forecast/3/wind_dir">—</span>, <span id="forecast/3/windspeed">—</span>&nbsp;<span class=".speed"></span>,
+        <span class="i18n">gusts up to</span> <span id="forecast/3/windspeed_max">—</span>&nbsp;<span class=".speed"></span>
+      </div>
+    </div>
+    <div class="box radio">
+      <h2 class="truncate"><span id="radio/status/title">—</span></h2>
+      <p class="truncate"><span id="radio/status/station">—</span><span id="radio/status/genre"></span></p>
+    </div>
+    <div id="studio/status/green" class="box i i-ready" title="READY&#010;off: Studio off&#010;on: Studio ready&#010;blink: Studio frozen (error)"><h2 class="i18n">Ready</h2></div>
+    <div id="studio/status/yellow" class="box i i-streaming" title="STREAMING&#010;off: Not streaming&#010;on: All streams up&#010;blink: Not all streams up&#010;(shows stream IDs)"><h2 class="i18n">Streaming</h2><p id="studio/status/streams">—</p></div>
+    <div id="studio/status/red" class="box i i-onair" title="ON AIR&#010;off: No microphone open&#010;on: At least one open microphone&#010;flash: End of song, announcement due&#010;blink: Overtime (talking too long)&#010;(shows open mic IDs)"><h2 class="i18n">On Air</h2><p id="studio/status/channels">—</p></div>
+    <div id="studio/status/blue" class="box i i-caller" title="CALLER&#010;off: No call&#010;flash: Incoming call (ringing)&#010;blink: Connected, talking off-air&#010;on: Caller on air&#010;(shows caller ID)"><h2 class="i18n">Caller</h2><p id="studio/status/phonenumber">—</p></div>
+  </div>
+</body>
+</html>

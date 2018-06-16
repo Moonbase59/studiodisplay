@@ -1,0 +1,21 @@
+TEST-WEBSERVER
+
+Kleiner (unsicherer) "Notfall-Trick", wenn man zum Probieren mal schnell eben einen minimalen Webserver braucht.
+
+$ python -m SimpleHTTPServer 8082
+
+Oder mit Python 3:
+
+$ python3 -m http.server 8082
+
+(Statt 8082 geht natürlich auch eine andere, unbenutzte Portnummer.)
+
+Nun kann man über den Browser z.B. http://localhost:8082/ aufrufen.
+
+Das geht auch von einem anderen PC im lokalen Netz, hierbei "localhost" durch den Hostnamen des verwendeten PC ersetzen.
+
+---
+
+Alle Python-Module und die Webseite können auf *irgendeinem* Rechner laufen,
+zum Beispiel auf dem Studio-PC, einer Synology oder sogar auf einem Raspberry Pi,
+mqtt-idjc.py *muss* aber immer auf dem Rechner laufen, wo IDJC installiert ist!

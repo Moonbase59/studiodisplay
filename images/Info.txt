@@ -1,0 +1,43 @@
+Images for different parts of the day (lighting)
+------------------------------------------------
+
+You can substitute these images against your own (or delete them in which case the system automatically selects an appropriate background color).
+
+The image names correspond to the different parts of the day (lighting conditions) and they must be named exactly as shown.
+
+In order to keep text on the StudioDisplay page readable, you should calculate the image’s total brightness and change the text colors in studiodisplay.js accordingly (i.e., use black text on images with 50-100%, use white text on images with 0-50% total average brightness).
+
+You can calculate the average brightness of an image easily using ImageMagick:
+
+convert image.jpg -colorspace Gray -format "%[fx:100*image.mean]" info:
+
+It will give you a percentage (0-100%).
+
+According to this, my current images have the following values:
+
+astronomical.jpg    11.2427   → bright text
+civil_blue.jpg      58.625    → dark text
+civil.jpg           62.2095   → dark text
+daylight.jpg        63.7803   → dark text
+golden.jpg          55.758    → dark text
+horizon.jpg         25.794    → bright text
+nautical_blue.jpg   21.0098   → bright text
+nautical.jpg        21.0098   → bright text
+night.jpg           6.91176   → bright text
+
+
+If you need the average RGB color values for an image (like for a background color):
+
+convert image.jpg -scale 1x1\! -format '%[fx:int(255*r+.5)],%[fx:int(255*g+.5)],%[fx:int(255*b+.5)]' info:-
+
+Here are the values for my images:
+
+astronomical.jpg     16,  30,  49 → #101e31
+civil_blue.jpg      151, 149, 152 → #979598
+civil.jpg           161, 158, 159 → #a19e9f
+daylight.jpg        133, 168, 195 → #85a8c3
+golden.jpg          170, 138,  98 → #aa8a62
+horizon.jpg         145,  45,  37 → #912d25
+nautical_blue.jpg    16,  57, 128 → #103980
+nautical.jpg         16,  57, 128 → #103980
+night.jpg            13,  18,  31 → #0d121f

@@ -1,0 +1,25 @@
+# Python byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Translations
+*.mo
+
+# Editor backups
+*~
+
+# Manual backups
+*.sav
+
+# All (real) config files except example.cfg
+config/*.cfg
+!config/example.cfg
+
+# source and development stuff
+Krempel/
+
+# Syncthing folder
+.stfolder/
