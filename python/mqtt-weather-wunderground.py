@@ -313,7 +313,8 @@ def on_message(mosq, obj, msg):
             config.set(my_section, configitem, msg.payload)
             # update weather directly, don’t wait for next update
             wunderground_get_weather()
-            wunderground_get_astronomy()
+            # skip astronomy for now
+            # wunderground_get_astronomy()
             wunderground_get_forecast()
         else:
             logger.info("Ignoring unknown configuration item " + configitem)
@@ -536,18 +537,35 @@ def wunderground_get_forecast():
         return
     logger.info("Getting Weather Underground data from " + wu_url)
 
-    try:
-        response = urllib2.urlopen(wu_url)
-    except urllib2.URLError as e:
-        logger.error('URLError: ' + str(wu_url) + ': ' + str(e.reason))
-        return None
-    except Exception:
-        import traceback
-        logger.error('Exception: ' + traceback.format_exc())
-        return None
+    # As of June, 2018, Wunderground seem extremely unreliable returning the forecast.
+    # Often the value of json['forecast']['txt_forecast']['date'] is an empty string
+    # and all values junk, including the simple forecast "epoch" dates
+    # which lie back sveral months in the past!
+    #
+    # Currently, the only way to prevent bad forecasts seems to be checking for
+    # an empty date and retry the call – using up calls per minute and day :-(
 
-    parsed_json = json.load(response)
-    response.close()
+    # FIXME: This might get us into en endless loop and eat up our allowed hits/day!
+
+    forecast_date = ""
+
+    while not forecast_date:
+        try:
+            response = urllib2.urlopen(wu_url)
+        except urllib2.URLError as e:
+            logger.error('URLError: ' + str(wu_url) + ': ' + str(e.reason))
+            return None
+        except Exception:
+            import traceback
+            logger.error('Exception: ' + traceback.format_exc())
+            return None
+
+        parsed_json = json.load(response)
+        response.close()
+        forecast_date = str(parsed_json['forecast']['txt_forecast']['date'])
+        if not forecast_date:
+            logger.info("Got invalid forecast data, retrying in 10s …")
+            time.sleep(10)  # TODO: make this configurable
 
     day = {}
     for d in range (0, 4): # 0-3
@@ -617,8 +635,5 @@ while rc == 0:
     # skip astronomy, it’s unreliable
     # we now do it in mqtt-astronomy, or using SunCalc in index.html
     # wunderground_get_astronomy()
-    # we are allowd 10 requests/minute using the free developer account, so pause
-    time.sleep(6)
     wunderground_get_forecast()
     time.sleep(config.getfloat(my_section, 'updaterate'))
-    pass

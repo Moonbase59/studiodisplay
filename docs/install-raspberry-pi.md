@@ -1101,7 +1101,7 @@ StudioDisplay normally shows colors/backgrounds/daylight phases/times and the we
 Let’s assume we found a New York weather station on Wunderground’s [Wundermap](https://www.wunderground.com/wundermap?lat=40.75&lon=-74&zoom=8&pin=&rad=1&rad.type=00Q&wxsn=0&svr=0&cams=0&sat=0&riv=0&mm=0&hur=0&apiref=b27828e10245d1a1) and it’s ID is `KNYNEWYO899` (Manhattan West):
 
 ```bash
- mosquitto_pub -h studiodisplay1 -t weather/1/set/pws -m KNYNEWYO899
+mosquitto_pub -h studiodisplay1 -t weather/1/set/pws -m KNYNEWYO899
 ```
 
 ![New York weather](images/new-york-weather.png)
