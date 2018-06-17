@@ -385,12 +385,12 @@ def show_channelstate(which=None):
                     monitor_muted = True
             # show a notice on KODI and pause playback (TV gets timeshifted if so configured)
             if config.getboolean(my_section, 'kodi'):
-                kodi_notice = {
-                    "title": _(u"On Air, pausing"),
-                    "message": "%s" % ' - '.join(channels_list)
-                }
                 command_topic = config.get(my_section, 'kodi_command_topic')
                 if command_topic and not kodi_paused:
+                    kodi_notice = {
+                        "title": _(u"On Air, pausing"),
+                        "message": "%s" % ' - '.join(channels_list)
+                    }
                     mqttclient.publish(config.get(mqtt_section, 'base_topic') + command_topic + "notify", json.dumps(kodi_notice), retain=True)
                     mqttclient.publish(config.get(mqtt_section, 'base_topic') + command_topic + "playbackstate", 'pause', retain=True)
                     logger.info("KODI notification: " + json.dumps(kodi_notice))
@@ -416,14 +416,14 @@ def show_channelstate(which=None):
                     monitor_muted = False
             # show a notice on KODI and resume playback
             if config.getboolean(my_section, 'kodi'):
-                kodi_notice = {
-                    "title": _(u"Off Air, resuming"),
-                    "message": ""
-                }
                 command_topic = config.get(my_section, 'kodi_command_topic')
                 if command_topic and kodi_paused:
-                    mqttclient.publish(config.get(mqtt_section, 'base_topic') + config.get(my_section, 'kodi_command_topic') + "notify", json.dumps(kodi_notice), retain=True)
-                    mqttclient.publish(config.get(mqtt_section, 'base_topic') + config.get(my_section, 'kodi_command_topic') + "playbackstate", 'resume', retain=True)
+                    kodi_notice = {
+                        "title": _(u"Off Air, resuming"),
+                        "message": ""
+                    }
+                    mqttclient.publish(config.get(mqtt_section, 'base_topic') + command_topic + "notify", json.dumps(kodi_notice), retain=True)
+                    mqttclient.publish(config.get(mqtt_section, 'base_topic') + command_topic + "playbackstate", 'resume', retain=True)
                     logger.info("KODI notification: " + json.dumps(kodi_notice))
                     logger.info("Resuming KODI …")
                     kodi_paused = False
