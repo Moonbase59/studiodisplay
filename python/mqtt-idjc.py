@@ -478,17 +478,17 @@ def run_silentjack():
     silentjack = which('silentjack')
     if silentjack:
         pid = os.getpid()
-        # It’d be better to connect idjc ports "str_out_l" and "str_out_r" yourself
-        # using Patchage or qjackctl and let IDJC remember it
-        # (because silentjack itself can only handle one connection),
-        # but that doesn’t work because silentjack isn’t yet there
-        # when IDJC makes connections :-(
-        # So, for the time being, we just connect the left channel.
-        # You can add 'str_out_r' after IDJC has been started.
-        port = "idjc_%s:%s" % (config.get(my_section, 'profile'), 'str_out_l')
+        # The following will work with both "old" and "new" versions of silentJACK,
+        # see https://github.com/Moonbase59/silentjack/tree/morechannels for my version:
+        # Original silentJACK accepts only ONE connection (the last "-c" option),
+        # so we try the right channel first, THEN the left channel.
+        # Using the original silentJACK, only the left channel will be auto-connected
+        # while my version of silentJACK will connect BOTH left and right channels.
+        port_r = "idjc_%s:%s" % (config.get(my_section, 'profile'), 'str_out_r')
+        port_l = "idjc_%s:%s" % (config.get(my_section, 'profile'), 'str_out_l')
         db = config.getint(my_section, 'silence_detection_db')
         secs = config.getint(my_section, 'silence_detection_seconds')
-        command = "%s -c %s -l %d -p %s -g %s -- kill -SIGUSR1 %d" % (silentjack, port, db, secs, 0, pid)
+        command = "%s -c %s -c %s -l %d -p %s -g %s -- kill -SIGUSR1 %d" % (silentjack, port_r, port_l, db, secs, 0, pid)
         logger.info("Starting silence detection: " + command)
         # TODO: Check if we can skip shell and stdout piping, to reduce overhead
         p = subprocess.Popen([command], shell=True, stdout=subprocess.PIPE, preexec_fn=os.setsid)
