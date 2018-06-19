@@ -54,7 +54,7 @@ Or just to make your smart home even smarter.
 * Up to two 24VDC signal towers (max. 5 + 3 lamp units) using separate SignalBox hardware.
 * 2 separate 120/230VAC outputs on SignalBox hardware (for »On Air« light outside studio, etc.).
 * Live stream metadata.
-* Adjustable silence detection.
+* Adjustable silence detection (currently uses [silentJACK](https://github.com/Moonbase59/silentjack)).
 * 2 talk timers (general plus announcement overtime).
 * Mutes studio monitor speakers when microphone(s) open.
 * Call monitor for request lines (for [AVM Fritz!Box](https://en.avm.de/products/fritzbox/) routers, others planned).
