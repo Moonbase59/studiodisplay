@@ -64,7 +64,7 @@ Or just to make your smart home even smarter.
 * Nearly all parameters can be changed on-the-fly, using simple MQTT messages.
 * Fully translatable into any language using Unicode translation files.
 * Compatible with the smarthome architecture proposed in [mqtt-smarthome](https://github.com/mqtt-smarthome/mqtt-smarthome).
-* Can easily be integrated into existing MQTT-based smarthome solutions, i.e. other brokers, [FHEM](https://fhem.de/) or [openHAB](https://www.openhab.org/).
+* Can easily be integrated into existing MQTT-based smarthome solutions, i.e. other brokers, [FHEM](https://fhem.de/), [openHAB](https://www.openhab.org/) or [Home Assistant](https://www.home-assistant.io/).
 * You can have as many StudioDisplays, SignalPis, SignalBoxes, and studios as you want, maybe for different studios or just showing different locations & weather data. All can run on one single MQTT broker.
 * Most modules can be used separately (i.e., you might need weather data, astronomy data or a call monitor for your smart home, without running a radio station).
 
