@@ -14,9 +14,10 @@ __pycache__/
 # Manual backups
 *.sav
 
-# All (real) config files except example.cfg
+# All (real) config files except example.cfg, unknown_host.cfg
 config/*.cfg
 !config/example.cfg
+!config/unknown_host.cfg
 
 # source and development stuff
 Krempel/
