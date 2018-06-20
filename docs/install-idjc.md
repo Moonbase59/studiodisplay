@@ -258,7 +258,7 @@ crontab -e
 Add (or edit) the entry like this (change the user name, mine is "matthias"):
 
 ```crontab
-@reboot /home/matthias/studiodisplay/python/mqtt-idjc.py &
+@reboot /home/matthias/studiodisplay/python/mqtt-idjc.py
 ```
 
 Assuming you use *nano* to edit your crontab, now press `Ctrl+O`, `Enter` and `Ctrl+X` to save and exit.

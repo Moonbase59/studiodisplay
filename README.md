@@ -400,7 +400,7 @@ crontab -e
 ```
 and adding a line like
 ```conf
-@reboot /usr/local/bin/raspimjpeg.py -w 1280 -h 720 -r 25 | /usr/local/bin/streameye -p 8081 &
+@reboot /usr/local/bin/raspimjpeg.py -w 1280 -h 720 -r 25 | /usr/local/bin/streameye -p 8081
 ```
 (Adapt width, height and framerate to your needs.)
 

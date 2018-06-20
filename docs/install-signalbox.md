@@ -252,7 +252,7 @@ crontab -e
 Now add (or edit) an entry like this:
 
 ```crontab
-@reboot sleep 5s && /home/pi/studiodisplay/python/mqtt-signalbox.py &
+@reboot sleep 5s && /home/pi/studiodisplay/python/mqtt-signalbox.py
 ```
 
 Assuming you use *nano* to edit your crontab, now press `Ctrl+O`, `Enter` and `Ctrl+X` to save and exit.

@@ -19,7 +19,7 @@ Install (on a Pi):
     mkdir config
     crontab -e
     (add the following line)
-    @reboot /home/pi/studiodisplay/python/mqtt-signalpi.py &
+    @reboot /home/pi/studiodisplay/python/mqtt-signalpi.py
     (save & exit)
     (copy the files "mqtt-signalpi.py" and "signalpi.py" into the /home/pi/studiodisplay/python/ folder)
     (example: scp user@computer:/home/user/studiodisplay/python/mqtt-signalpi.py /home/pi/studiodisplay/python/)

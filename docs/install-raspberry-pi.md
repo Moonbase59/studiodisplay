@@ -454,7 +454,7 @@ crontab -e
 Add (or edit) the entry like this:
 
 ```crontab
-@reboot /home/pi/studiodisplay/python/mqtt-weather-wunderground.py &
+@reboot /home/pi/studiodisplay/python/mqtt-weather-wunderground.py
 ```
 
 Assuming you use *nano* to edit your crontab, now press `Ctrl+O`, `Enter` and `Ctrl+X` to save and exit.
@@ -711,7 +711,7 @@ crontab -e
 Add (or edit) the entry like this:
 
 ```crontab
-@reboot /home/pi/studiodisplay/python/mqtt-astronomy.py &
+@reboot /home/pi/studiodisplay/python/mqtt-astronomy.py
 ```
 
 Assuming you use *nano* to edit your crontab, now press `Ctrl+O`, `Enter` and `Ctrl+X` to save and exit.
@@ -843,7 +843,7 @@ crontab -e
 Add (or edit) the entry like this:
 
 ```crontab
-@reboot /home/pi/studiodisplay/python/mqtt-radio.py &
+@reboot /home/pi/studiodisplay/python/mqtt-radio.py
 ```
 
 Assuming you use *nano* to edit your crontab, now press `Ctrl+O`, `Enter` and `Ctrl+X` to save and exit.
@@ -961,7 +961,7 @@ crontab -e
 Add (or edit) the entry like this:
 
 ```crontab
-@reboot /home/pi/studiodisplay/python/mqtt-callmonitor-fritz.py &
+@reboot /home/pi/studiodisplay/python/mqtt-callmonitor-fritz.py
 ```
 
 Assuming you use *nano* to edit your crontab, now press `Ctrl+O`, `Enter` and `Ctrl+X` to save and exit.
