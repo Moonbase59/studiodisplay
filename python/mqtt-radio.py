@@ -87,6 +87,10 @@ def on_connect(self, mosq, obj, rc):
         # Publish connected status
         connected_topic = config.get(mqtt_section, 'base_topic') + config.get(my_section, 'client_topic') + 'connected'
         mqttclient.publish(connected_topic, 2, qos=2, retain=True)
+        # publish URL and encoding, in case the station delivers no stream metadata
+        status_topic = config.get(mqtt_section, 'base_topic') + config.get(my_section, 'client_topic') + 'status/'
+        mqttclient.publish(status_topic + "url", config.get(my_section, 'url'), retain=True)
+        mqttclient.publish(status_topic + "encoding", config.get(my_section, 'encoding'), retain=True)
 
 
 def on_subscribe(mosq, obj, mid, granted_qos):
@@ -104,6 +108,10 @@ def on_message(mosq, obj, msg):
             # TODO unset when value set to ""
             logger.info("Setting configuration " + configitem + " to " + msg.payload)
             config.set(my_section, configitem, msg.payload)
+            # publish URL and encoding, in case the station delivers no stream metadata
+            if configitem in ['url', 'encoding']:
+                status_topic = config.get(mqtt_section, 'base_topic') + config.get(my_section, 'client_topic') + 'status/' + configitem
+                mqttclient.publish(status_topic, msg.payload, retain=True)
             # stop icymonitor in order to reload with new data
             icymonitor.icymonitor_stop()
         else:
@@ -125,6 +133,8 @@ def title_callback(timestamp, station='', genre='', description='', title=''):
 #   Building message info as JSON package
     send_msg = {
         'timestamp': timestamp,
+        'url': config.get(my_section, 'url'),
+        'encoding': config.get(my_section, 'encoding'),
         'station': station,
         'genre': genre,
         'description': description,
@@ -138,6 +148,8 @@ def title_callback(timestamp, station='', genre='', description='', title=''):
         logger.info("Published radio json data to " + status_topic)
     else:
         mqttclient.publish(status_topic + "timestamp", timestamp, retain=True)
+        mqttclient.publish(status_topic + "url", config.get(my_section, 'url'), retain=True)
+        mqttclient.publish(status_topic + "encoding", config.get(my_section, 'encoding'), retain=True)
         mqttclient.publish(status_topic + "station", station, retain=True)
         mqttclient.publish(status_topic + "genre", genre, retain=True)
         mqttclient.publish(status_topic + "description", description, retain=True)

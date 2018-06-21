@@ -141,6 +141,7 @@ def on_connect(self, mosq, obj, rc):
         # set LED brightness (0.0 .. 1.0)
         set_brightness(config.get(my_section, 'brightness'))
         set_color(config.get(my_section, 'color'))
+        set_power(config.get(my_section, 'power'))
         # Subscribe to a light source topic, if one is given
         light_topic = config.get(mqtt_section, 'base_topic') + config.get(my_section, 'light_topic')
         if light_topic:
@@ -164,7 +165,7 @@ def on_message(mosq, obj, msg):
     set_topic = config.get(mqtt_section, 'base_topic') + config.get(my_section, 'client_topic') + 'set/'
     light_topic = config.get(mqtt_section, 'base_topic') + config.get(my_section, 'light_topic')
 
-    if msg.topic.startswith(light_topic):
+    if light_topic and msg.topic.startswith(light_topic):
         set_color(msg.payload)
 
     if msg.topic.startswith(set_topic):
@@ -176,6 +177,8 @@ def on_message(mosq, obj, msg):
                 set_brightness(msg.payload)
             elif configitem == 'color':
                 set_color(msg.payload)
+            elif configitem == 'power':
+                set_power(msg.payload)
             elif configitem == 'light_topic':
                 # unsubscribe first, if needed
                 if light_topic:
@@ -198,6 +201,26 @@ def on_publish(mosq, obj, mid):
 
 # UnicornLight/Unicorn (p)HAT stuff
 
+# set "power", pseudo function for smarthome automation
+# just set brightness to zero (or last value)
+def set_power(value):
+    # Possible boolean values in the configuration.
+    BOOLEAN_STATES = {'1': True, 'yes': True, 'true': True, 'on': True,
+                      '0': False, 'no': False, 'false': False, 'off': False}
+    if value.lower() in BOOLEAN_STATES:
+        status_topic = config.get(mqtt_section, 'base_topic') + config.get(my_section, 'client_topic') + 'status/power'
+        if BOOLEAN_STATES[value.lower()]:
+            uh.brightness(config.getfloat(my_section, 'brightness') / 100.0)
+            uh.show()
+            config.set(my_section, 'power', 'on')
+            mqttclient.publish(status_topic, 'on', retain=True)
+        else:
+            uh.brightness(0.0)
+            uh.show()
+            config.set(my_section, 'power', 'off')
+            mqttclient.publish(status_topic, 'off', retain=True)
+            logger.info("Power set to " + config.get(my_section, 'power'))
+
 # set Unicorn LED’s brightness from 0 to 100%
 def set_brightness(value):
     try:
@@ -208,9 +231,12 @@ def set_brightness(value):
         value = 0
     elif value > 100:
         value = 100
-    config.set(my_section, 'brightness', str(value))
+
     uh.brightness(value / 100.0)
     uh.show()
+    config.set(my_section, 'brightness', str(value))
+    status_topic = config.get(mqtt_section, 'base_topic') + config.get(my_section, 'client_topic') + 'status/brightness'
+    mqttclient.publish(status_topic, config.get(my_section, 'brightness'), retain=True)
     logger.info("Brightness set to " + config.get(my_section, 'brightness'))
 
 # set Unicorn LED’s color, either °K or R,G,B
@@ -240,10 +266,16 @@ def set_color(value):
         elif colors[0] > 40000:
             colors[0] = 40000
         r, g, b = ct.color_temperature_to_rgb(colors[0])
+    else:
+        # return early, no valid colors
+        logger.info("Ignoring invalid color: " + value)
+        return
 
-    config.set(my_section, 'color', ','.join([str(r), str(g), str(b)]))
     uh.set_all(r, g, b)
     uh.show()
+    config.set(my_section, 'color', ','.join([str(r), str(g), str(b)]))
+    status_topic = config.get(mqtt_section, 'base_topic') + config.get(my_section, 'client_topic') + 'status/color'
+    mqttclient.publish(status_topic, config.get(my_section, 'color'), retain=True)
     logger.info("Color set to " + config.get(my_section, 'color'))
 
 
