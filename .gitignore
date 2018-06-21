@@ -24,3 +24,6 @@ Krempel/
 
 # Syncthing folder
 .stfolder/
+
+# logs
+*.log
