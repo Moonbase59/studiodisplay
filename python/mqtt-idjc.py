@@ -46,9 +46,10 @@ Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
 
 
 # IMPORTS
+import sys
+import subprocess
 import json
 import re
-import paho.mqtt.client as paho
 import threading
 import time
 import logging
@@ -57,11 +58,34 @@ import signal # for silence detection
 import os
 import ConfigParser # Py2: ConfigParser; Py3: configparser
 
-import gobject
-from idjcmonitor import IDJCMonitor
+try:
+    from idjcmonitor import IDJCMonitor
+except ImportError:
+    exit("""
+Error: Can’t import 'idjcmonitor'.
+This usually means you’re running this on a machine with no IDJC installed.
+Check: Are you on the machine running IDJC?
+       Have you installed IDJC first (it installs 'idjcmonitor')?
+""")
 
-import sys
-import subprocess
+try:
+    import gobject
+except ImportError:
+    exit("""
+Error: Can’t import 'gobject'.
+This usually means that the GTK+ toolkit 'python-gobject' isn’t installed.
+Try: sudo apt-get install python-gobject
+""")
+
+try:
+    import paho.mqtt.client as paho
+except ImportError:
+    exit("""
+Error: Can’t import 'paho.mqtt.client'.
+This usually means you haven’t yet installed the MQTT client.
+Try: sudo apt-get install python-pip
+     sudo pip install paho-mqtt
+""")
 
 # Component config from configuration file
 config = ConfigParser.SafeConfigParser()
