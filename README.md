@@ -101,6 +101,8 @@ You need:
 
 * A Linux-based system (your IDJC machine is one). We assume here that you use some Debian-derivative (like Debian, Ubuntu, Linux Mint, Raspbian) but it will also work on other Linux distros. You only have to substitute different commands for your package management (like with Arch Linux or Manjaro, for instance).
 
+  For installation hints on **non-Debian-based Linuxes**, see [docs/install-non-debian.md](docs/install-non-debian.md).
+
 * Python 2 and Python 3 with `pip` and `pip3` installed. These might already be installed in your distro. If not, do a
   ```bash
   sudo apt-get update
