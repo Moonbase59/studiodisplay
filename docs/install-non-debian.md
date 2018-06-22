@@ -114,3 +114,9 @@ Possible reasons are …
 * Your system might not have the `x-terminal-emulator`. Use `nano` to edit `startall.sh` and simply substitute _your system’s_ X terminal emulator for all occurrences of `x-terminal-emulator`.
 
   _Hint:_ On Arch-based systems like _Manjaro_, this is typically `xfce4-terminal`.
+
+### You started it from a desktop file manager
+
+In general, one shouldn’t start shell scripts from a desktop file manager (like _Nemo_, _Thunar_, …). This can lead to lots of unwanted side effects.
+
+* Always open a terminal and start `startall.sh` or `stopall.sh` from there.
