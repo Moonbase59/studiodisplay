@@ -5,6 +5,8 @@ Or just to make your smart home even smarter.
 
 ![StudioDisplay](docs/images/studiodisplay.jpg)
 
+---
+
 ## Table of Contents
 
 <!-- MDTOC maxdepth:6 firsth1:2 numbering:0 flatten:0 bullets:1 updateOnSave:1 -->
@@ -34,6 +36,10 @@ Or just to make your smart home even smarter.
       - [Change »Streaming/On Air« to »On Air/Mic live«](#change-»streamingon-air«-to-»on-airmic-live«)   
       - [Switch languages, locales and measurement units](#switch-languages-locales-and-measurement-units)   
       - [Add a simple studio webcam (MJPEG stream)](#add-a-simple-studio-webcam-mjpeg-stream)   
+- [Using `git` to get and update StudioDisplay](#using-git-to-get-and-update-studiodisplay)   
+   - [First install](#first-install)   
+   - [Normal update](#normal-update)   
+   - [Destructive update (overwrite your changes with latest version)](#destructive-update-overwrite-your-changes-with-latest-version)   
 - [Tested with …](#tested-with-…)   
 - [Versioning](#versioning)   
 - [Translation](#translation)   
@@ -42,6 +48,8 @@ Or just to make your smart home even smarter.
 - [Credits](#credits)   
 
 <!-- /MDTOC -->
+
+---
 
 ## Main features
 
@@ -69,6 +77,8 @@ Or just to make your smart home even smarter.
 * You can have as many StudioDisplays, SignalPis, SignalBoxes, and studios as you want, maybe for different studios or just showing different locations & weather data. All can run on one single MQTT broker.
 * Most modules can be used separately (i.e., you might need weather data, astronomy data or a call monitor for your smart home, without running a radio station).
 
+---
+
 ## Currently available modules
 
 * **StudioDisplay:** Shows it all on the big screen (Raspberry Pi 3B/3B+ required, [_Blinkt_](https://shop.pimoroni.com/products/blinkt) module recommended).
@@ -81,6 +91,7 @@ Or just to make your smart home even smarter.
 * **mqtt-signalpi (SignalPi):** The »poor man’s signal tower« (typically used on a Raspberry Pi Zero W, [_Blinkt_](https://shop.pimoroni.com/products/blinkt) module required).
 * **mqtt-unicornlight (UnicornLight):** Experimental mini »ambient light« (Raspberry Pi Zero W or better and [_Unicorn pHAT_](https://shop.pimoroni.com/products/unicorn-phat) or [_Unicorn HAT_](https://shop.pimoroni.com/products/unicorn-hat) required).
 
+---
 
 ## Getting Started
 
@@ -141,6 +152,7 @@ You need:
   sudo pip3 install paho-mqtt
   ```
 
+---
 
 ### Installing
 
@@ -201,6 +213,7 @@ pws = IHAMBURG2112
 
 Save and exit as usual with `Ctrl+O`, `Enter`, `Ctrl+X`.
 
+---
 
 ## Testing StudioDisplay
 
@@ -246,6 +259,7 @@ Open IDJC and test out various functions, like
 * check what happens when a song/playlist ends
 * test that speakers are muted when a mic goes live
 
+---
 
 ## Next steps
 
@@ -409,6 +423,46 @@ and adding a line like
 
 StreamEye will then autostart with your Raspberry Pi and provide the webcam stream at  [http://studiodisplay1:8081/](http://studiodisplay1:8081/).
 
+---
+
+## Using `git` to get and update StudioDisplay
+
+### First install
+
+Normally, you would install StudioDisplay by simply cloning this repository:
+
+```bash
+cd
+git clone https://github.com/Moonbase59/studiodisplay.git
+```
+
+### Normal update
+
+A standard update to the latest version works as follows:
+
+```bash
+cd ~/studiodisplay/
+git pull
+```
+
+Pulling a new version will _not_ overwrite any configuration files you added for your system in the `config` subfolder.
+
+### Destructive update (overwrite your changes with latest version)
+
+In case git complains and suggests to _stash_ or _merge_, the most probable reason is that you have changed something in the source files.
+
+If you want to revert your changes and return to the latest and greatest version here on GitHub, you might want a »hard reset«:
+
+```bash
+cd ~/studiodisplay/
+git fetch --all
+git reset --hard origin/master
+```
+
+This _will_ overwrite all source files, documentation and the example configuration. Nevertheless, it _will not_ destroy any configuration files you added for your system in the `config` folder.
+
+---
+
 ## Tested with …
 
 StudioDisplay is in daily production use at several webradio studios. Here’s a non-comprehensive list of systems I personally tested with:
@@ -420,9 +474,13 @@ StudioDisplay is in daily production use at several webradio studios. Here’s a
 * Manjaro 17.1.10
 * Raspbian Stretch (on Raspberry Pi 3B, 3B+ and Zero W)
 
+---
+
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/moonbase59/studiodisplay/tags).
+
+---
 
 ## Translation
 
@@ -432,13 +490,19 @@ Read more in [docs/translation.md](docs/translation.md).
 
 If you think you can help, start with the `~/studiodisplay/config/lang-en-US.json` file, translate and test it in your language and open an issue. It’d be a bonus if you know the correct meteorological terms and the official measurement units for your language and country.
 
+---
+
 ## Author
 
 **Matthias C. Hormann** – [Moonbase59](https://github.com/Moonbase59)
 
+---
+
 ## License
 
 This project is licensed under the GPL-v3 license. See the [COPYING](COPYING) file for details.
+
+---
 
 ## Credits
 
