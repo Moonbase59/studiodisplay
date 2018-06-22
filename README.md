@@ -34,6 +34,7 @@ Or just to make your smart home even smarter.
       - [Change »Streaming/On Air« to »On Air/Mic live«](#change-»streamingon-air«-to-»on-airmic-live«)   
       - [Switch languages, locales and measurement units](#switch-languages-locales-and-measurement-units)   
       - [Add a simple studio webcam (MJPEG stream)](#add-a-simple-studio-webcam-mjpeg-stream)   
+- [Tested with …](#tested-with-…)   
 - [Versioning](#versioning)   
 - [Translation](#translation)   
 - [Author](#author)   
@@ -407,6 +408,17 @@ and adding a line like
 (Adapt width, height and framerate to your needs.)
 
 StreamEye will then autostart with your Raspberry Pi and provide the webcam stream at  [http://studiodisplay1:8081/](http://studiodisplay1:8081/).
+
+## Tested with …
+
+StudioDisplay is in daily production use at several webradio studios. Here’s a non-comprehensive list of systems I personally tested with:
+
+* Ubuntu Studio 14.04.5 LTS
+* Ubuntu 16.04
+* Linux Mint 17.3
+* Linux Mint 18.3
+* Manjaro 17.1.10
+* Raspbian Stretch (on Raspberry Pi 3B, 3B+ and Zero W)
 
 ## Versioning
 
