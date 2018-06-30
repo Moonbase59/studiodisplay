@@ -454,8 +454,10 @@ crontab -e
 Add (or edit) the entry like this:
 
 ```crontab
-@reboot /home/pi/studiodisplay/python/mqtt-weather-wunderground.py
+@reboot sleep 10s && /home/pi/studiodisplay/python/mqtt-weather-wunderground.py
 ```
+
+(We add a 10-second sleep before the actual command, so the network has time to come up. Your mileage may vary.)
 
 Assuming you use *nano* to edit your crontab, now press `Ctrl+O`, `Enter` and `Ctrl+X` to save and exit.
 
@@ -711,8 +713,10 @@ crontab -e
 Add (or edit) the entry like this:
 
 ```crontab
-@reboot /home/pi/studiodisplay/python/mqtt-astronomy.py
+@reboot sleep 10s && /home/pi/studiodisplay/python/mqtt-astronomy.py
 ```
+
+(We add a 10-second sleep before the actual command, so the network has time to come up. Your mileage may vary.)
 
 Assuming you use *nano* to edit your crontab, now press `Ctrl+O`, `Enter` and `Ctrl+X` to save and exit.
 
@@ -843,8 +847,10 @@ crontab -e
 Add (or edit) the entry like this:
 
 ```crontab
-@reboot /home/pi/studiodisplay/python/mqtt-radio.py
+@reboot sleep 10s && /home/pi/studiodisplay/python/mqtt-radio.py
 ```
+
+(We add a 10-second sleep before the actual command, so the network has time to come up. Your mileage may vary.)
 
 Assuming you use *nano* to edit your crontab, now press `Ctrl+O`, `Enter` and `Ctrl+X` to save and exit.
 
@@ -961,8 +967,10 @@ crontab -e
 Add (or edit) the entry like this:
 
 ```crontab
-@reboot /home/pi/studiodisplay/python/mqtt-callmonitor-fritz.py
+@reboot sleep 10s && /home/pi/studiodisplay/python/mqtt-callmonitor-fritz.py
 ```
+
+(We add a 10-second sleep before the actual command, so the network has time to come up. Your mileage may vary.)
 
 Assuming you use *nano* to edit your crontab, now press `Ctrl+O`, `Enter` and `Ctrl+X` to save and exit.
 

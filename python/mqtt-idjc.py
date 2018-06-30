@@ -145,8 +145,11 @@ lock = threading.Lock()
 
 # Create the callbacks for Mosquitto
 def on_connect(self, mosq, obj, rc):
+    # show readable connection result (rc)
+    logger.info(paho.connack_string(rc))
     if rc == 0:
-        logger.info("Connected to broker " + config.get(mqtt_section, 'host') + ":" + config.get(mqtt_section, 'port'))
+        # connection successful
+        logger.info("Connected to broker " + config.get(mqtt_section, 'host') + ":" + config.get(mqtt_section, 'port') + " as user '" + config.get(mqtt_section, 'username') + "'")
 
         # Subscribe to device config
         set_topic = config.get(mqtt_section, 'base_topic') + config.get(my_section, 'client_topic') + 'set/#'
@@ -533,6 +536,8 @@ mqttclient.on_publish = on_publish
 # Set the last will, connect to broker, publish connected
 connected_topic = config.get(mqtt_section, 'base_topic') + config.get(my_section, 'client_topic') + 'connected'
 logger.info("Connecting to broker " + config.get(mqtt_section, 'host') + ":" + config.get(mqtt_section, 'port'))
+if config.get(mqtt_section, 'username'):
+    mqttclient.username_pw_set(config.get(mqtt_section, 'username'), password=config.get(mqtt_section, 'password'))
 mqttclient.will_set(connected_topic, 0, qos=2, retain=True)
 mqttclient.connect(config.get(mqtt_section, 'host'), config.getint(mqtt_section, 'port'), 60)
 mqttclient.publish(connected_topic, 1, qos=1, retain=True)
