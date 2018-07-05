@@ -75,7 +75,8 @@ logger.info('Read configuration from ' + configfile)
 # Create the callbacks for Mosquitto
 def on_connect(self, mosq, obj, rc):
     if rc == 0:
-        logger.info("Connected to broker " + config.get(mqtt_section, 'host') + ":" + config.get(mqtt_section, 'port'))
+        # connection successful
+        logger.info("Connected to broker " + config.get(mqtt_section, 'host') + ":" + config.get(mqtt_section, 'port') + " as user '" + config.get(mqtt_section, 'username') + "'")
 
 
 def on_subscribe(mosq, obj, mid, granted_qos):
@@ -120,6 +121,8 @@ mqttclient.on_publish = on_publish
 
 # Set the last will, connect to broker, publish connected
 logger.info("Connecting to broker " + config.get(mqtt_section, 'host') + ":" + config.get(mqtt_section, 'port'))
+if config.get(mqtt_section, 'username'):
+    mqttclient.username_pw_set(config.get(mqtt_section, 'username'), password=config.get(mqtt_section, 'password'))
 # mqttclient.will_set(config.get(my_section, 'publish_topic') + "connected", 0, qos=2, retain=True)
 mqttclient.connect(config.get(mqtt_section, 'host'), config.getint(mqtt_section, 'port'), 60)
 # mqttclient.publish(config.get(my_section, 'publish_topic') + "connected", 1, qos=1, retain=True)
