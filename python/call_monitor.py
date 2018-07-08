@@ -133,8 +133,14 @@ class callmonitor:
             self.call_handler[int(line[2])] = {"type": "outgoing", "from": line[4], "to": line[5], "device": line[6], "initiated": timestamp, "accepted": None, "closed": None}
             self.call_callback(int(line[2]), "outgoing", self.call_handler[int(line[2])])
         elif (line[1] == "CONNECT"):
-            self.call_handler[int(line[2])]["accepted"] = timestamp
-            self.call_callback(int(line[2]), "accepted", self.call_handler[int(line[2])])
+            try:
+                self.call_handler[int(line[2])]["accepted"] = timestamp
+                self.call_callback(int(line[2]), "accepted", self.call_handler[int(line[2])])
+            except KeyError:
+                pass
         elif (line[1] == "DISCONNECT"):
-            self.call_handler[int(line[2])]["closed"] = timestamp
-            self.call_callback(int(line[2]), "closed", self.call_handler[int(line[2])])
+            try:
+                self.call_handler[int(line[2])]["closed"] = timestamp
+                self.call_callback(int(line[2]), "closed", self.call_handler[int(line[2])])
+            except KeyError:
+                pass
