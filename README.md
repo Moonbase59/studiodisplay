@@ -192,6 +192,8 @@ Changes are written with `Ctrl+O` and then pressing `Enter`. Exit nano with `Ctr
 
 #### Weather Underground key and weather source
 
+**UPDATE: Please read issue [#4](https://github.com/Moonbase59/studiodisplay/issues/4)**
+
 Get your own [Weather Underground API key](https://www.wunderground.com/weather/api?apiref=b27828e10245d1a1). A developer key for up to 500 requests/day and max. 10/minute can be had for free. If you need more frequent updates than once per 15 minutes, or use StudioDisplay commercially, you might investigate into their other options.
 
 Get the Wunderground Station ID of a reliable weather station near you. Check out their [Wundermap](https://www.wunderground.com/wundermap/?apiref=b27828e10245d1a1).

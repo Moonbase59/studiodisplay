@@ -350,6 +350,8 @@ Detailled installation instructions are in [docs/install-signalbox.md](install-s
 
 ### Requirements
 
+**UPDATE: Please read issue [#4](https://github.com/Moonbase59/studiodisplay/issues/4)**
+
 * Within our `studiodisplay` folder:  
   `config/*` (configuration and language files)  
   `python/mqtt-weather-wunderground.py`  
