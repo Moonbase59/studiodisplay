@@ -84,7 +84,12 @@ def icymonitor(url, callback=None, encoding=None, timeout=5.0):
     socket.setdefaulttimeout(timeout)
 
     request = urllib.request.Request(url, headers = {
-        'User-Agent': 'StudioDisplay/0.4 ' + platform.system() + '/' + platform.release(),
+        'User-Agent': 'StudioDisplay/0.5 (' +
+            platform.system() + '; ' +
+            platform.release() + '; ' +
+            platform.machine() + '; ' +
+            platform.architecture()[0] + '; ' +
+            (encoding or '') + ')',
         'Icy-MetaData': '1',
         'Range': 'bytes=0-',
         'X-Clacks-Overhead': 'GNU Terry Pratchett'
