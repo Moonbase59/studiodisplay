@@ -736,9 +736,20 @@ Then try to access the test page at [http://studiodisplay1/studiodisplay/astrono
 
 ![studiodisplay-en-GB-day-radio](images/studiodisplay-en-GB-day-radio.png)
 
-This module actually *listens* to the radio stream your station produces. It works with Icecast, SHOUTcast version 1.x and 2.x streams (no matter if you stream OGG, MP3, or even AAC).
+This module actually *listens* to the radio stream your station produces. It works with Icecast, SHOUTcast version 1.x and 2.x streams (no matter if you stream OGG, MP3, or even AAC). The actual audio is discarded, and the in-stream metadata used to display what’s currently playing.
 
-The module will present itself to the server as an actual *listener* with a client identification of `StudioDisplay/0.4`. So if you restrict your server to specific clients for some reason, you might want to allow this one.
+The module will present itself to the server as an actual *listener* with a client identification ("user agent") of `StudioDisplay/0.5`. So if you restrict your server to specific clients for some reason, or exclude "bots", you might want to _allow this one_.
+
+Here are some examples of StudioDisplay’s `User-Agent`:
+
+```
+StudioDisplay/0.5 (Linux; 5.15.0-79-generic; x86_64; 64bit; latin1)
+StudioDisplay/0.5 (Windows; 10; AMD64; 64bit; utf-8)
+StudioDisplay/0.5 (Darwin; 21.4.0; x86_64; 64bit; utf-8)
+StudioDisplay/0.5 (Linux; 5.10.63-v7+; armv7l; 32bit; utf-8)
+```
+
+The values in parentheses show the operating system, release, machine type, bitness and—most important—the _encoding_ StudioDisplay expects the stream metadata to have. This last parameter will be empty if StudioDisplay is _guessing_ the encoding.
 
 ### Requirements
 
@@ -804,7 +815,7 @@ encoding =
 Insert your own station’s streaming URL and encoding in the config file.
 
 Don’t rely on automatic encoding guesses (empty `encoding =`), this might horribly fail!
-If you don’t really know your station’s title encoding (you *should*!), try `utf-8` first (more modern, can display foreign lagnguage characters correctly), then `latin1` (latin-1, also known as ISO-8859-1, was—and often still *is*—the usual encoding in olden times).
+If you don’t really know your station’s title encoding (you *should*!), try `utf-8` first (more modern, can display foreign language characters correctly), then `latin1` (latin-1, also known as ISO-8859-1, was—and often still *is*—the usual encoding in olden times).
 
 
 ### Installation
