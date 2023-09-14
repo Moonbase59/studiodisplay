@@ -53,6 +53,7 @@ import time
 import logging
 import socket
 import os
+import sys
 import configparser as ConfigParser # Py2: ConfigParser; Py3: configparser
 import suncalc
 import datetime
@@ -61,7 +62,12 @@ import re
 import colortemperature as ct
 
 # Component config from configuration file
-config = ConfigParser.SafeConfigParser()
+# SafeConfigParser was deprecated in Python 3.2
+if sys.version_info >= (3, 2):
+    config = ConfigParser.ConfigParser()
+else:
+    config = ConfigParser.SafeConfigParser()
+
 # configfiles are named like "../config/hostname.cfg"
 configfile = os.path.dirname(os.path.realpath(__file__)) + '/../config/' + socket.gethostname() + '.cfg'
 config.read(configfile)

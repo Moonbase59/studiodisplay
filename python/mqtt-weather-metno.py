@@ -58,6 +58,7 @@ import time
 import logging
 import socket
 import os
+import sys
 import configparser
 import metno_locationforecast as mnl
 import datetime as dt
@@ -65,7 +66,12 @@ from dateutil import tz
 import math
 
 # Component config from configuration file
-config = configparser.SafeConfigParser()
+# SafeConfigParser was deprecated in Python 3.2
+if sys.version_info >= (3, 2):
+    config = configparser.ConfigParser()
+else:
+    config = configparser.SafeConfigParser()
+
 # configfiles are named like "../config/hostname.cfg"
 configfile = os.path.dirname(os.path.realpath(__file__)) + '/../config/' + socket.gethostname() + '.cfg'
 config.read(configfile)
