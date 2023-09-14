@@ -570,7 +570,7 @@ function onMessageArrived(msg) {
     // show current weather icon, modify class
     if (shortestName == "icon") {
       el.innerHTML = '';
-      el.className = 'wi wi-wu-' + msg.payloadString;
+      el.className = 'wi ' + msg.payloadString;
     }
 
     // Numbers to be converted to localized representation -- shortName

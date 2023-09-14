@@ -22,6 +22,9 @@ config/*.cfg
 # source and development stuff
 Krempel/
 
+# met.no default data cache
+data/
+
 # Syncthing folder
 .stfolder/
 

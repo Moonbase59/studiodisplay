@@ -116,7 +116,7 @@ table, tr, td {
   grid-template-rows: 1fr;
   grid-gap: 0;
   /* background that covers the entire element at all times */
-  background-image: none; // or url('images/xxx.jpg'), set by function
+  background-image: none; /* or url('images/xxx.jpg'), set by function */
   /* background-repeat: no-repeat;
   background-attachment: fixed; */
   background-size: cover;
@@ -225,7 +225,7 @@ html {
   transition: background 1s ease;
 
   /* background that covers the entire browser window at all times */
-  background-image: none; // or url('images/xxx.jpg'), set by function setLighting()
+  background-image: none; /* or url('images/xxx.jpg'), set by function setLighting() */
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;

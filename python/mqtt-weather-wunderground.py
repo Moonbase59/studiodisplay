@@ -386,6 +386,7 @@ def wunderground_get_weather():
     wind_dir = str(parsed_json['current_observation']['wind_dir']) # needs translation
     feelslike = str(parsed_json['current_observation']['feelslike_c'])
     icon = str(parsed_json['current_observation']['icon'])
+    wi_icon = 'wi-wu-' + icon
     icon_url = str(parsed_json['current_observation']['icon_url'])
     city = str(parsed_json['current_observation']['display_location']['city'])
     latitude = str(parsed_json['current_observation']['display_location']['latitude'])
@@ -409,7 +410,7 @@ def wunderground_get_weather():
         'weather': weather,
         'wind_dir': wind_dir,
         'feelslike': feelslike,
-        'icon': icon,
+        'icon': wi_icon,
         'icon_url': icon_url,
         'city': city,
         'latitude': latitude,
@@ -437,7 +438,7 @@ def wunderground_get_weather():
         mqttclient.publish(status_topic + "weather", weather, retain=True)
         mqttclient.publish(status_topic + "wind_dir", wind_dir, retain=True)
         mqttclient.publish(status_topic + "feelslike", feelslike, retain=True)
-        mqttclient.publish(status_topic + "icon", icon, retain=True)
+        mqttclient.publish(status_topic + "icon", wi_icon, retain=True)
         mqttclient.publish(status_topic + "icon_url", icon_url, retain=True)
         mqttclient.publish(status_topic + "city", city, retain=True)
         mqttclient.publish(status_topic + "latitude", latitude, retain=True)

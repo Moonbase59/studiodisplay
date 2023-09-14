@@ -110,9 +110,15 @@ table, tr, td {
   overflow: hidden;
 }
 
+.v-pad {
+  padding-top: 0.5em;
+}
+
 .v-center {
   display: flex;
   align-items: center;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 .title {
@@ -375,7 +381,7 @@ html {
   transition: background 1s ease;
 
   /* background that covers the entire browser window at all times */
-  background-image: none; // or url('images/xxx.jpg'), set by function setLighting()
+  background-image: none; /* or url('images/xxx.jpg'), set by function setLighting() */
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
