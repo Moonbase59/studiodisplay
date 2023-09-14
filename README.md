@@ -82,7 +82,8 @@ Or just to make your smart home even smarter.
 ## Currently available modules
 
 * **StudioDisplay:** Shows it all on the big screen (Raspberry Pi 3B/3B+ required, [_Blinkt_](https://shop.pimoroni.com/products/blinkt) module recommended).
-* **mqtt-weather-wunderground:** Weather data provider, includes 3-day forecast (free Wunderground API key required).
+* **mqtt-weather-wunderground:** Weather data provider, includes 3-day forecast (free Wunderground API key required). Now defunct, see [\#4](https://github.com/Moonbase59/studiodisplay/issues/4).
+* **mqtt-weather-metno:** Weather data from the Norwegian Meteorological Institute. Not yet complete (forecast missing).
 * **mqtt-astronomy:** Sunrise, sunset, moonrise, moonset, moon phase and phases of the day. Can be used to control ambient lighting and anything dependent on the phase of the day.
 * **mqtt-callmonitor-fritz:** Call monitor for [AVM Fritz!Box](https://en.avm.de/products/fritzbox/) routers, can also notify/control a [KODI](https://kodi.tv/)/[LibreELEC](https://libreelec.tv/) media player.
 * **mqtt-radio:** Live radio stream metadata display.
